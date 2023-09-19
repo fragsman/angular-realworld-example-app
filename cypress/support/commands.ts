@@ -28,38 +28,56 @@
 
 export {};
 
- declare global {
-   namespace Cypress {
-     interface Chainable {
-        loginToApplication(): Chainable<void>
-        loginThroughApi(): Chainable<void>
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-     }
-   }
- }
-
-Cypress.Commands.add("loginToApplication", ()=>{
-    cy.visit("/login")
-    cy.get("[placeholder='Email']").type(Cypress.env("username"))
-    cy.get("[placeholder='Password']").type(Cypress.env("password"))
-    cy.contains("button","Sign in").click()
-})
-
-Cypress.Commands.add("loginThroughApi", ()=>{
-  const userCredentials = {
-    "user" : {
-      "email" : Cypress.env("username"),
-      "password" : Cypress.env("password")
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      loginToApplication(): Chainable<void>;
+      loginThroughApi(): Chainable<void>;
+      deleteArticleViaApi(userToken: string, slugId: string): Chainable<void>;
+      //       login(email: string, password: string): Chainable<void>
+      //       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
+      //       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
+      //       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
     }
   }
-  cy.request("POST","https://api.realworld.io/api/users/login",userCredentials).its("body").then(body =>{
-    const token = body.user.token
-    cy.visit("/", {
-      onBeforeLoad(win){
-        win.localStorage.setItem("jwtToken",token)
-    }})
-  })
-})
+}
+
+Cypress.Commands.add("loginToApplication", () => {
+  cy.visit("/login");
+  cy.get("[placeholder='Email']").type(Cypress.env("username"));
+  cy.get("[placeholder='Password']").type(Cypress.env("password"));
+  cy.contains("button", "Sign in").click();
+});
+
+Cypress.Commands.add("loginThroughApi", () => {
+  const userCredentials = {
+    user: {
+      email: Cypress.env("username"),
+      password: Cypress.env("password"),
+    },
+  };
+  cy.request(
+    "POST",
+    "https://api.realworld.io/api/users/login",
+    userCredentials
+  )
+    .its("body")
+    .then((body) => {
+      const token = body.user.token;
+      cy.visit("/", {
+        onBeforeLoad(win) {
+          win.localStorage.setItem("jwtToken", token);
+        },
+      });
+    });
+});
+
+Cypress.Commands.add("deleteArticleViaApi", (userToken, slugId) => {
+  cy.request({
+    url: "https://api.realworld.io/api/articles/" + slugId,
+    method: "DELETE",
+    headers: {
+      Authorization: "Token " + userToken,
+    },
+  });
+});
