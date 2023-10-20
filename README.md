@@ -72,3 +72,21 @@ The example application is a social blogging site (i.e. a Medium.com clone) call
 <br />
 
 [![Brought to you by Thinkster](https://raw.githubusercontent.com/gothinkster/realworld/master/media/end.png)](https://thinkster.io)
+
+## Fede's instructions
+
+## Quick Install :floppy_disk:
+
+- Install **npm**
+- From a CMD install AngularCLI with `npm install -g @angular/cli`
+- From CMD install yarn with `npm install --global yarn`
+- Open the project folder in **VS Code** and open a Terminal
+- You will probably need to configure execution policiy for the following commands from now on:
+- Open a PowerShell as Administrator and type
+- `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+- Install project dependencies with `yarn install`
+
+## Quick Run :runner:
+
+- To run the server in a **VS Code** Terminal enter `ng start`
+- To open cypress in a **VS Code** Terminal enter `npx cypress open`
